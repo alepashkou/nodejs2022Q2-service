@@ -6,6 +6,7 @@ import {
 import { Artist } from '../interfaces/artist.interface';
 import { validate as uuidValidate, v4 as uuidv4 } from 'uuid';
 import { CreateArtistDto } from '../dto/create-aritst.dto';
+import { UpdateArtistDto } from '../dto/update-artist.dto';
 
 @Injectable()
 export class ArtistService {
@@ -31,7 +32,7 @@ export class ArtistService {
     return artist;
   }
 
-  updateArtist(id: string, artistDto: CreateArtistDto): Artist {
+  updateArtist(id: string, artistDto: UpdateArtistDto): Artist {
     if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
     const findedArtist = this.artists.find((artist) => artist.id === id);
     if (!findedArtist) throw new NotFoundException('Not Found');
