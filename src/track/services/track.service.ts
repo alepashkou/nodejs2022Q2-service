@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Track } from '../interfaces/track.interface';
-import { validate as uuidValidate, v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { CreateTrackDto } from '../dto/create-track.dto';
 import { UpdateTrackDto } from '../dto/update-track.dto';
 import { EventEmitter2 } from 'eventemitter2';
@@ -18,7 +18,6 @@ export class TrackService {
   }
 
   getTrack(id: string): Track {
-    if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
     const findedTrack = this.tracks.find((track) => track.id === id);
     if (!findedTrack) throw new NotFoundException('Not Found');
     return findedTrack;
@@ -34,7 +33,6 @@ export class TrackService {
   }
 
   updateTrack(id: string, trackDto: UpdateTrackDto): Track {
-    if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
     const findedTrack = this.tracks.find((track) => track.id === id);
     if (!findedTrack) throw new NotFoundException('Not Found');
     const updatedTrack = {
@@ -48,7 +46,6 @@ export class TrackService {
   }
 
   deleteTrack(id: string): void {
-    if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
     const findedTrack = this.tracks.find((track) => track.id === id);
     if (!findedTrack) throw new NotFoundException('Not Found');
     this.tracks = this.tracks.filter((track) => track.id !== id);

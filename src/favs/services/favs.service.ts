@@ -1,13 +1,8 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { AlbumService } from 'src/album/services/album.service';
 import { ArtistService } from 'src/artist/services/artist.service';
 import { TrackService } from 'src/track/services/track.service';
 import { Favorites, FavoritesResponse } from '../interfaces/favs.interfaces';
-import { validate as uuidValidate } from 'uuid';
 import { Album } from 'src/album/interfaces/album.interface';
 import { Artist } from 'src/artist/interfaces/artist.interface';
 import { Track } from 'src/track/interfaces/track.interface';
@@ -33,7 +28,6 @@ export class FavsService {
     return { artists, albums, tracks };
   }
   addFavorite(type: string, id: string): Artist | Album | Track {
-    if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
     switch (type) {
       case 'artist':
         const artist = this.artistService
@@ -61,7 +55,6 @@ export class FavsService {
     }
   }
   deleteFavorite(type: string, id: string): void {
-    if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
     switch (type) {
       case 'artist':
         this.favorites.artistIds = this.favorites.artistIds.filter(

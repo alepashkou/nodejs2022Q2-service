@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -22,7 +23,7 @@ export class UserController {
   }
 
   @Get(':id')
-  getUser(@Param('id') id: string): User {
+  getUser(@Param('id', new ParseUUIDPipe()) id: string): User {
     return this.userService.getUser(id);
   }
 
@@ -32,13 +33,16 @@ export class UserController {
   }
 
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() track: UpdatePasswordDto): User {
+  updateUser(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() track: UpdatePasswordDto,
+  ): User {
     return this.userService.updateUser(id, track);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  deleteUser(@Param('id') id: string): void {
+  deleteUser(@Param('id', new ParseUUIDPipe()) id: string): void {
     return this.userService.deleteUser(id);
   }
 }

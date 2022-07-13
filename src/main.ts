@@ -5,6 +5,7 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { dirname, join } from 'path';
 import { parse } from 'yaml';
 import { readFile } from 'fs/promises';
+import { HeadersInterceptor } from './core/interceptors/headers.interceptor';
 
 const PORT: number = +process.env.PORT || 4000;
 
@@ -17,6 +18,8 @@ async function bootstrap() {
   const document = parse(API);
 
   SwaggerModule.setup('api', app, document);
+
+  app.useGlobalInterceptors(new HeadersInterceptor());
 
   await app.listen(PORT);
 }

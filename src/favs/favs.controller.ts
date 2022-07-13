@@ -1,4 +1,12 @@
-import { Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { Album } from 'src/album/interfaces/album.interface';
 import { Artist } from 'src/artist/interfaces/artist.interface';
 import { Track } from 'src/track/interfaces/track.interface';
@@ -15,13 +23,16 @@ export class FavsController {
   @Post('/:type/:id')
   addFavorite(
     @Param('type') type: string,
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
   ): Artist | Album | Track {
     return this.favsService.addFavorite(type, id);
   }
   @Delete('/:type/:id')
   @HttpCode(204)
-  deleteFavorite(@Param('type') type: string, @Param('id') id: string): void {
+  deleteFavorite(
+    @Param('type') type: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): void {
     this.favsService.deleteFavorite(type, id);
   }
 }

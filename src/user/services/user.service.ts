@@ -18,7 +18,6 @@ export class UserService {
   }
 
   getUser(id: string): User {
-    if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
     const findedUser = this.users.find((user) => user.id === id);
     if (!findedUser) throw new NotFoundException('Not Found');
     return findedUser;
@@ -39,7 +38,6 @@ export class UserService {
   }
 
   updateUser(id: string, userPasswordDto: UpdatePasswordDto): User {
-    if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
     const findedUser = this.users.find((user) => user.id === id);
     if (!findedUser) throw new NotFoundException('Not Found');
     if (userPasswordDto.oldPassword !== findedUser.password)

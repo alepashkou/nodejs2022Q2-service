@@ -1,10 +1,6 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Album } from '../interfaces/album.interface';
-import { validate as uuidValidate, v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { CreateAlbumDto } from '../dto/create-album.dto';
 import { UpdateAlbumDto } from '../dto/update-album.dto';
 import { EventEmitter2 } from 'eventemitter2';
@@ -19,7 +15,6 @@ export class AlbumService {
   }
 
   getAlbum(id: string): Album {
-    if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
     const findedAlbum = this.albums.find((album) => album.id === id);
     if (!findedAlbum) throw new NotFoundException('Not Found');
     return findedAlbum;
@@ -35,7 +30,6 @@ export class AlbumService {
   }
 
   updateAlbum(id: string, albumDto: UpdateAlbumDto): Album {
-    if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
     const findedAlbum = this.albums.find((album) => album.id === id);
     if (!findedAlbum) throw new NotFoundException('Not Found');
     const updatedAlbum = {
@@ -49,7 +43,6 @@ export class AlbumService {
   }
 
   deleteAlbum(id: string): void {
-    if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
     const findedAlbum = this.albums.find((album) => album.id === id);
     if (!findedAlbum) throw new NotFoundException('Not Found');
     this.albums = this.albums.filter((album) => album.id !== id);
