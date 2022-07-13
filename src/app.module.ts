@@ -5,6 +5,7 @@ import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { TrackModule } from './track/track.module';
 import { FavsModule } from './favs/favs.module';
+import { CoreModule } from './core/core.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -13,6 +14,7 @@ import { FavsModule } from './favs/favs.module';
     AlbumModule,
     TrackModule,
     FavsModule,
+    CoreModule,
   ],
 })
 export class AppModule {}

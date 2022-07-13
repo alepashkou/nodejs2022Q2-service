@@ -53,4 +53,7 @@ export class ArtistService {
     this.artists = this.artists.filter((artist) => artist.id !== id);
     return { message: 'Deleted' };
   }
+  findByIds(ids: string[]): Artist[] {
+    return this.artists.filter((artist) => ids.includes(artist.id));
+  }
 }

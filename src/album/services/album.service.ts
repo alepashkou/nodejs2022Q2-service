@@ -52,4 +52,7 @@ export class AlbumService {
     if (!findedAlbum) throw new NotFoundException('Not Found');
     this.albums = this.albums.filter((album) => album.id !== id);
   }
+  findByIds(ids: string[]): Album[] {
+    return this.albums.filter((album) => ids.includes(album.id));
+  }
 }

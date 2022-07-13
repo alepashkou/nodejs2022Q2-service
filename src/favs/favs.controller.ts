@@ -1,4 +1,27 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { Album } from 'src/album/interfaces/album.interface';
+import { Artist } from 'src/artist/interfaces/artist.interface';
+import { Track } from 'src/track/interfaces/track.interface';
+import { FavoritesResponse } from './interfaces/favs.interfaces';
+import { FavsService } from './services/favs.service';
 
 @Controller('favs')
-export class FavsController {}
+export class FavsController {
+  constructor(private readonly favsService: FavsService) {}
+  @Get()
+  getFavorites(): FavoritesResponse {
+    return this.favsService.getFavorites();
+  }
+  @Post('/:type/:id')
+  addFavorite(
+    @Param('type') type: string,
+    @Param('id') id: string,
+  ): Artist | Album | Track {
+    return this.favsService.addFavorite(type, id);
+  }
+  @Delete('/:type/:id')
+  @HttpCode(204)
+  deleteFavorite(@Param('type') type: string, @Param('id') id: string): void {
+    this.favsService.deleteFavorite(type, id);
+  }
+}
