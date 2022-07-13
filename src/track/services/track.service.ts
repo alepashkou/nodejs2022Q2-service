@@ -10,14 +10,15 @@ import { UpdateTrackDto } from '../dto/update-track.dto';
 
 @Injectable()
 export class TrackService {
-  track: Track[] = [];
+  tracks: Track[] = [];
+
   getTracks(): Track[] {
-    return this.track;
+    return this.tracks;
   }
 
   getTrack(id: string): Track {
     if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
-    const findedTrack = this.track.find((track) => track.id === id);
+    const findedTrack = this.tracks.find((track) => track.id === id);
     if (!findedTrack) throw new NotFoundException('Not Found');
     return findedTrack;
   }
@@ -27,19 +28,19 @@ export class TrackService {
       id: uuidv4(),
       ...trackDto,
     };
-    this.track.push(track);
+    this.tracks.push(track);
     return track;
   }
 
   updateTrack(id: string, trackDto: UpdateTrackDto): Track {
     if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
-    const findedTrack = this.track.find((track) => track.id === id);
+    const findedTrack = this.tracks.find((track) => track.id === id);
     if (!findedTrack) throw new NotFoundException('Not Found');
     const updatedTrack = {
       ...findedTrack,
       ...trackDto,
     };
-    this.track = this.track.map((track) =>
+    this.tracks = this.tracks.map((track) =>
       track.id === id ? updatedTrack : track,
     );
     return updatedTrack;
@@ -47,8 +48,8 @@ export class TrackService {
 
   deleteTrack(id: string): void {
     if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
-    const findedTrack = this.track.find((track) => track.id === id);
+    const findedTrack = this.tracks.find((track) => track.id === id);
     if (!findedTrack) throw new NotFoundException('Not Found');
-    this.track = this.track.filter((track) => track.id !== id);
+    this.tracks = this.tracks.filter((track) => track.id !== id);
   }
 }

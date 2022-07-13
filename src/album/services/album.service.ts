@@ -10,15 +10,15 @@ import { UpdateAlbumDto } from '../dto/update-album.dto';
 
 @Injectable()
 export class AlbumService {
-  album: Album[] = [];
+  albums: Album[] = [];
 
   getAlbums(): Album[] {
-    return this.album;
+    return this.albums;
   }
 
   getAlbum(id: string): Album {
     if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
-    const findedAlbum = this.album.find((album) => album.id === id);
+    const findedAlbum = this.albums.find((album) => album.id === id);
     if (!findedAlbum) throw new NotFoundException('Not Found');
     return findedAlbum;
   }
@@ -28,19 +28,19 @@ export class AlbumService {
       id: uuidv4(),
       ...albumDto,
     };
-    this.album.push(album);
+    this.albums.push(album);
     return album;
   }
 
   updateAlbum(id: string, albumDto: UpdateAlbumDto): Album {
     if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
-    const findedAlbum = this.album.find((album) => album.id === id);
+    const findedAlbum = this.albums.find((album) => album.id === id);
     if (!findedAlbum) throw new NotFoundException('Not Found');
     const updatedAlbum = {
       ...findedAlbum,
       ...albumDto,
     };
-    this.album = this.album.map((album) =>
+    this.albums = this.albums.map((album) =>
       album.id === id ? updatedAlbum : album,
     );
     return updatedAlbum;
@@ -48,8 +48,8 @@ export class AlbumService {
 
   deleteAlbum(id: string): void {
     if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
-    const findedAlbum = this.album.find((album) => album.id === id);
+    const findedAlbum = this.albums.find((album) => album.id === id);
     if (!findedAlbum) throw new NotFoundException('Not Found');
-    this.album = this.album.filter((album) => album.id !== id);
+    this.albums = this.albums.filter((album) => album.id !== id);
   }
 }
