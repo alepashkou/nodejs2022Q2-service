@@ -7,9 +7,10 @@ import { Track } from '../interfaces/track.interface';
 import { validate as uuidValidate, v4 as uuidv4 } from 'uuid';
 import { CreateTrackDto } from '../dto/create-track.dto';
 import { UpdateTrackDto } from '../dto/update-track.dto';
-
+import { EventEmitter2 } from 'eventemitter2';
 @Injectable()
 export class TrackService {
+  constructor(private eventEmitter: EventEmitter2) {}
   tracks: Track[] = [];
 
   getTracks(): Track[] {
@@ -51,8 +52,19 @@ export class TrackService {
     const findedTrack = this.tracks.find((track) => track.id === id);
     if (!findedTrack) throw new NotFoundException('Not Found');
     this.tracks = this.tracks.filter((track) => track.id !== id);
+    this.eventEmitter.emit('delete.track', id);
   }
+
   findByIds(ids: string[]): Track[] {
     return this.tracks.filter((track) => ids.includes(track.id));
+  }
+
+  deleteId(type: string, id: string) {
+    this.tracks = this.tracks.map((track) => {
+      if (track[type + 'Id'] === id) {
+        return { ...track, [type + 'Id']: null };
+      }
+      return track;
+    });
   }
 }

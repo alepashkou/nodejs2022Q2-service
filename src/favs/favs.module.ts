@@ -7,6 +7,7 @@ import { FavsService } from './services/favs.service';
 
 @Module({
   imports: [AlbumModule, ArtistModule, TrackModule],
+  exports: [FavsService],
   controllers: [FavsController],
   providers: [FavsService],
 })

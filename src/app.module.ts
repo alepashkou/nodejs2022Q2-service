@@ -6,6 +6,7 @@ import { AlbumModule } from './album/album.module';
 import { TrackModule } from './track/track.module';
 import { FavsModule } from './favs/favs.module';
 import { CoreModule } from './core/core.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -15,6 +16,7 @@ import { CoreModule } from './core/core.module';
     TrackModule,
     FavsModule,
     CoreModule,
+    EventEmitterModule.forRoot(),
   ],
 })
 export class AppModule {}

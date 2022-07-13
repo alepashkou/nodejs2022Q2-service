@@ -82,4 +82,9 @@ export class FavsService {
         throw new Error('Unknown type');
     }
   }
+  deleteId(type: string, id: string) {
+    this.favorites[type + 'Ids'] = this.favorites[type + 'Ids'].filter(
+      (itemId) => itemId !== id,
+    );
+  }
 }

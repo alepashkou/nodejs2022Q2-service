@@ -7,10 +7,13 @@ import { Artist } from '../interfaces/artist.interface';
 import { validate as uuidValidate, v4 as uuidv4 } from 'uuid';
 import { CreateArtistDto } from '../dto/create-aritst.dto';
 import { UpdateArtistDto } from '../dto/update-artist.dto';
+import { EventEmitter2 } from 'eventemitter2';
 
 @Injectable()
 export class ArtistService {
   artists: Artist[] = [];
+
+  constructor(private eventEmitter: EventEmitter2) {}
 
   getArtists(): Artist[] {
     return this.artists;
@@ -46,13 +49,14 @@ export class ArtistService {
     return updatedArtist;
   }
 
-  deleteArtist(id: string): { message: string } {
+  deleteArtist(id: string): void {
     if (!uuidValidate(id)) throw new BadRequestException('Not uuid');
     const findedArtist = this.artists.find((artist) => artist.id === id);
     if (!findedArtist) throw new NotFoundException('Not Found');
     this.artists = this.artists.filter((artist) => artist.id !== id);
-    return { message: 'Deleted' };
+    this.eventEmitter.emit('delete.artist', id);
   }
+
   findByIds(ids: string[]): Artist[] {
     return this.artists.filter((artist) => ids.includes(artist.id));
   }
