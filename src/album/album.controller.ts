@@ -39,7 +39,7 @@ export class AlbumController {
 
   @Delete(':id')
   @HttpCode(204)
-  deletealbum(@Param('id') id: string) {
+  deleteAlbum(@Param('id') id: string): void {
     return this.albumServices.deleteAlbum(id);
   }
 }
