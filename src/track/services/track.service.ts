@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Track } from '../interfaces/track.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateTrackDto } from '../dto/create-track.dto';
