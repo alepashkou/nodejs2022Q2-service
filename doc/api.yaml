@@ -249,7 +249,7 @@ paths:
           description: Validation failed (uuid  is expected)
         404:
           description: Not Found
-  /tracks:
+  /track:
     get:
       tags:
         - Track
@@ -299,7 +299,7 @@ paths:
                 $ref: '#/components/schemas/Track'
         400:
           description: Bad request. body does not contain required fields
-  /tracks/{id}:
+  /track/{id}:
     parameters:
       - name: id
         in: path
@@ -397,7 +397,7 @@ paths:
           description: Bad request. trackId is invalid (not uuid)
         404:
           description: Not Found
-  /albums:
+  /album:
     get:
       tags:
         - Album
@@ -445,7 +445,7 @@ paths:
                 $ref: '#/components/schemas/Album'
         400:
           description: Bad request. body does not contain required fields
-  /albums/{id}:
+  /album/{id}:
     parameters:
       - name: id
         in: path
@@ -516,7 +516,7 @@ paths:
           description: Bad request. albumId is invalid (not uuid)
         404:
           description: Not Found
-  /artists:
+  /artist:
     get:
       tags:
         - Artist
@@ -559,7 +559,7 @@ paths:
                 $ref: '#/components/schemas/Artist'
         400:
           description: Bad request. body does not contain required fields
-  /artists/{id}:
+  /artist/{id}:
     parameters:
       - name: id
         in: path
