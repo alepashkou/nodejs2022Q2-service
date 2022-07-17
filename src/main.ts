@@ -17,7 +17,7 @@ async function bootstrap() {
   const API = await readFile(join(rootDir, 'doc', 'api.yaml'), 'utf-8');
   const document = parse(API);
 
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('doc', app, document);
 
   app.useGlobalInterceptors(new HeadersInterceptor());
 
