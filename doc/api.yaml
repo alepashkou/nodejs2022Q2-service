@@ -114,7 +114,7 @@ security:
   - bearerAuth: []
 
 paths:
-  /users:
+  /user:
     get:
       tags:
         - Users
@@ -129,8 +129,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
     post:
       tags:
         - Users
@@ -162,7 +160,7 @@ paths:
                 $ref: '#/components/schemas/User'
         400:
           description: Bad request. body does not contain required fields
-  /users/{userId}:
+  /user/{userId}:
     parameters:
       - name: userId
         in: path
@@ -182,9 +180,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         400:
-          description: Bad request. userId is invalid (not uuid)
+          description: Validation failed (uuid  is expected)
         404:
-          description: User not found
+          description: Not Found
 
     put:
       tags:
@@ -233,11 +231,11 @@ paths:
                     type: integer
                     example: 1655999999
         400:
-          description: Bad request. userId is invalid (not uuid)
+          description: Validation failed (uuid  is expected)
         403:
-          description: oldPassowrd is wrong
+          description: Password is not correct
         404:
-          description: User not found
+          description: Not Found
 
     delete:
       tags:
@@ -248,9 +246,9 @@ paths:
         204:
           description: The user has been deleted
         400:
-          description: Bad request. userId is invalid (not uuid)
+          description: Validation failed (uuid  is expected)
         404:
-          description: User not found
+          description: Not Found
   /tracks:
     get:
       tags:
@@ -324,7 +322,7 @@ paths:
         400:
           description: Bad request. trackId is invalid (not uuid)
         404:
-          description: Track was not found.
+          description: Not Found
     put:
       tags:
         - Track
@@ -386,7 +384,7 @@ paths:
         400:
           description: Bad request. trackId is invalid (not uuid)
         404:
-          description: Track was not found.
+          description: Not Found
     delete:
       tags:
         - Track
@@ -397,10 +395,8 @@ paths:
           description: Delelted succesfully
         400:
           description: Bad request. trackId is invalid (not uuid)
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Track was not found.
+          description: Not Found
   /albums:
     get:
       tags:
@@ -472,7 +468,7 @@ paths:
         400:
           description: Bad request. albumId is invalid (not uuid)
         404:
-          description: Album was not found.
+          description: Not Found
     put:
       tags:
         - Album
@@ -507,7 +503,7 @@ paths:
         400:
           description: Bad request. albumId is invalid (not uuid)
         404:
-          description: Album was not found.
+          description: Not Found
     delete:
       tags:
         - Album
@@ -519,7 +515,7 @@ paths:
         400:
           description: Bad request. albumId is invalid (not uuid)
         404:
-          description: Album was not found.
+          description: Not Found
   /artists:
     get:
       tags:
@@ -586,7 +582,7 @@ paths:
         400:
           description: Bad request. artistId is invalid (not uuid)
         404:
-          description: Artist was not found.
+          description: Not Found
     put:
       tags:
         - Artist
@@ -616,7 +612,7 @@ paths:
         400:
           description: Bad request. artistId is invalid (not uuid)
         404:
-          description: Artist was not found.
+          description: Not Found
     delete:
       tags:
         - Artist
@@ -628,7 +624,7 @@ paths:
         400:
           description: Bad request. artistId is invalid (not uuid)
         404:
-          description: Artist was not found.
+          description: Not Found
   /favs:
     get:
       tags:
@@ -673,7 +669,7 @@ paths:
         400:
           description: Bad. trackId is invalid (not uuid)
         404:
-          description: Track was not found.
+          description: Not Found
   /favs/album/{id}:
     parameters:
       - name: id
@@ -705,7 +701,7 @@ paths:
         400:
           description: Bad. albumId is invalid (not uuid)
         404:
-          description: Album was not found.
+          description: Not Found
   /favs/artist/{id}:
     parameters:
       - name: id
@@ -737,4 +733,4 @@ paths:
         400:
           description: Bad request. artistId is invalid (not uuid)
         404:
-          description: Artist was not found.
+          description: Not Found
