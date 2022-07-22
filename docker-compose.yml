@@ -2,7 +2,6 @@ version: '3.7'
 services:
   node:
     container_name: node-service
-    image: alepashkou/nodejs2022q2-service:node-service
     env_file:
       - .env
     build:
@@ -21,7 +20,6 @@ services:
       - node-postgres-bridge
   postgres:
     container_name: postgres-service
-    image: alepashkou/nodejs2022q2-service:postgres-service
     env_file:
       - .env
     build: ./database/

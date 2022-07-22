@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "docker": "docker-compose up",
-    "docker:scan": "docker scan alepashkou/nodejs2022q2-service:node-service",
+    "docker:scan": "docker scan nodejs2022q2-service_node:latest",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
