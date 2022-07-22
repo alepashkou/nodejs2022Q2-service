@@ -5,7 +5,7 @@ import { TrackService } from 'src/track/services/track.service';
 import { Favorites, FavoritesResponse } from '../interfaces/favs.interfaces';
 import { Album } from 'src/album/entity/album.entity';
 import { Artist } from 'src/artist/entity/artist.entity';
-import { Track } from 'src/track/interfaces/track.interface';
+import { Track } from 'src/track/entity/track.entity';
 
 @Injectable()
 export class FavsService {
@@ -24,7 +24,7 @@ export class FavsService {
     const { artistIds, albumIds, trackIds } = this.favorites;
     const artists = await this.artistService.findByIds(artistIds);
     const albums = await this.albumService.findByIds(albumIds);
-    const tracks = this.trackSerrvice.findByIds(trackIds);
+    const tracks = await this.trackSerrvice.findByIds(trackIds);
     return { artists, albums, tracks };
   }
 
@@ -45,9 +45,9 @@ export class FavsService {
         this.favorites.albumIds.push(id);
         return album;
       case 'track':
-        const track = this.trackSerrvice
-          .getTracks()
-          .find((track) => track.id === id);
+        const track = (await this.trackSerrvice.getTracks()).find(
+          (track) => track.id === id,
+        );
         if (!track) throw new UnprocessableEntityException('Artist not found');
         this.favorites.trackIds.push(id);
         return track;

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Album } from 'src/album/entity/album.entity';
 import { Artist } from 'src/artist/entity/artist.entity';
-import { Track } from 'src/track/interfaces/track.interface';
+import { Track } from 'src/track/entity/track.entity';
 import { FavoritesResponse } from './interfaces/favs.interfaces';
 import { FavsService } from './services/favs.service';
 

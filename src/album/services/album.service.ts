@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Album } from '../entity/album.entity';
 import { CreateAlbumDto } from '../dto/create-album.dto';
 import { UpdateAlbumDto } from '../dto/update-album.dto';
-import { EventEmitter2 } from 'eventemitter2';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 @Injectable()
@@ -10,7 +9,6 @@ export class AlbumService {
   constructor(
     @InjectRepository(Album)
     private albumRepository: Repository<Album>,
-    private eventEmitter: EventEmitter2,
   ) {}
 
   async getAlbums(): Promise<Album[]> {
@@ -42,20 +40,9 @@ export class AlbumService {
     const findedAlbum = await this.albumRepository.findOneBy({ id });
     if (!findedAlbum) throw new NotFoundException('Not Found');
     await this.albumRepository.delete(id);
-    this.eventEmitter.emit('delete.album', id);
   }
 
   async findByIds(ids: string[]): Promise<Album[]> {
     return this.albumRepository.find({ where: { id: In(ids) } });
-  }
-
-  async deleteId(type: string, id: string): Promise<void> {
-    await this.albumRepository
-      .find({ where: { [type + 'Id']: id } })
-      .then((albums) => {
-        albums.forEach((album) =>
-          this.albumRepository.update(album.id, { [type + 'Id']: null }),
-        );
-      });
   }
 }
