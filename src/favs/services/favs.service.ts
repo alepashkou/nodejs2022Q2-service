@@ -3,7 +3,7 @@ import { AlbumService } from 'src/album/services/album.service';
 import { ArtistService } from 'src/artist/services/artist.service';
 import { TrackService } from 'src/track/services/track.service';
 import { Favorites, FavoritesResponse } from '../interfaces/favs.interfaces';
-import { Album } from 'src/album/interfaces/album.interface';
+import { Album } from 'src/album/entity/album.entity';
 import { Artist } from 'src/artist/entity/artist.entity';
 import { Track } from 'src/track/interfaces/track.interface';
 
@@ -23,7 +23,7 @@ export class FavsService {
   async getFavorites(): Promise<FavoritesResponse> {
     const { artistIds, albumIds, trackIds } = this.favorites;
     const artists = await this.artistService.findByIds(artistIds);
-    const albums = this.albumService.findByIds(albumIds);
+    const albums = await this.albumService.findByIds(albumIds);
     const tracks = this.trackSerrvice.findByIds(trackIds);
     return { artists, albums, tracks };
   }
@@ -38,9 +38,9 @@ export class FavsService {
         this.favorites.artistIds.push(id);
         return artist;
       case 'album':
-        const album = this.albumService
-          .getAlbums()
-          .find((album) => album.id === id);
+        const album = (await this.albumService.getAlbums()).find(
+          (album) => album.id === id,
+        );
         if (!album) throw new UnprocessableEntityException('Artist not found');
         this.favorites.albumIds.push(id);
         return album;
