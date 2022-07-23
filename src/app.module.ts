@@ -25,6 +25,8 @@ import { FavsModule } from './favs/favs.module';
       database: process.env.POSTGRES_DB,
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
+      migrations: ['dist/**/migration/*.js'],
+      migrationsRun: true,
     }),
   ],
 })

@@ -39,7 +39,6 @@ export class FavsService {
         ids.trackIds.push(fav.typeId);
       }
     });
-    console.log(ids);
     const artists = await this.artistService.findByIds(ids.artistIds);
     const albums = await this.albumService.findByIds(ids.albumIds);
     const tracks = await this.trackSerrvice.findByIds(ids.trackIds);
