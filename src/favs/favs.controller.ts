@@ -32,10 +32,10 @@ export class FavsController {
 
   @Delete('/:type/:id')
   @HttpCode(204)
-  deleteFavorite(
+  async deleteFavorite(
     @Param('type') type: string,
     @Param('id', new ParseUUIDPipe()) id: string,
-  ): void {
-    this.favsService.deleteFavorite(type, id);
+  ) {
+    await this.favsService.deleteFavorite(type, id);
   }
 }

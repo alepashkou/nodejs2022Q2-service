@@ -2,29 +2,48 @@ import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { AlbumService } from 'src/album/services/album.service';
 import { ArtistService } from 'src/artist/services/artist.service';
 import { TrackService } from 'src/track/services/track.service';
-import { Favorites, FavoritesResponse } from '../interfaces/favs.interfaces';
+import { FavoritesResponse } from '../interfaces/favs.interfaces';
 import { Album } from 'src/album/entity/album.entity';
 import { Artist } from 'src/artist/entity/artist.entity';
 import { Track } from 'src/track/entity/track.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Favorites } from '../entity/favs.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class FavsService {
-  favorites: Favorites = {
-    artistIds: [],
-    albumIds: [],
-    trackIds: [],
-  };
   constructor(
+    @InjectRepository(Favorites)
+    private readonly favoritesRepository: Repository<Favorites>,
     private readonly artistService: ArtistService,
     private readonly albumService: AlbumService,
     private readonly trackSerrvice: TrackService,
   ) {}
 
   async getFavorites(): Promise<FavoritesResponse> {
-    const { artistIds, albumIds, trackIds } = this.favorites;
-    const artists = await this.artistService.findByIds(artistIds);
-    const albums = await this.albumService.findByIds(albumIds);
-    const tracks = await this.trackSerrvice.findByIds(trackIds);
+    const allFavorites = await this.favoritesRepository.find();
+    const ids = {
+      artistIds: [],
+      albumIds: [],
+      trackIds: [],
+    };
+
+    allFavorites.forEach((fav) => {
+      if (fav.type === 'artist') {
+        ids.artistIds.push(fav.typeId);
+      }
+      if (fav.type === 'album') {
+        ids.albumIds.push(fav.typeId);
+      }
+      if (fav.type === 'track') {
+        ids.trackIds.push(fav.typeId);
+      }
+    });
+    console.log(ids);
+    const artists = await this.artistService.findByIds(ids.artistIds);
+    const albums = await this.albumService.findByIds(ids.albumIds);
+    const tracks = await this.trackSerrvice.findByIds(ids.trackIds);
+
     return { artists, albums, tracks };
   }
 
@@ -35,50 +54,45 @@ export class FavsService {
           (artist) => artist.id === id,
         );
         if (!artist) throw new UnprocessableEntityException('Artist not found');
-        this.favorites.artistIds.push(id);
-        return artist;
+        await this.favoritesRepository.save({
+          type: 'artist',
+          typeId: id,
+        });
+        return this.artistService.getArtist(id);
       case 'album':
         const album = (await this.albumService.getAlbums()).find(
           (album) => album.id === id,
         );
-        if (!album) throw new UnprocessableEntityException('Artist not found');
-        this.favorites.albumIds.push(id);
-        return album;
+        if (!album) throw new UnprocessableEntityException('Album not found');
+        await this.favoritesRepository.save({
+          type: 'album',
+          typeId: id,
+        });
+        return this.albumService.getAlbum(id);
       case 'track':
         const track = (await this.trackSerrvice.getTracks()).find(
           (track) => track.id === id,
         );
-        if (!track) throw new UnprocessableEntityException('Artist not found');
-        this.favorites.trackIds.push(id);
-        return track;
+        if (!track) throw new UnprocessableEntityException('Track not found');
+        await this.favoritesRepository.save({
+          type: 'track',
+          typeId: id,
+        });
+        return this.trackSerrvice.getTrack(id);
       default:
         throw new Error('Unknown type');
     }
   }
-  deleteFavorite(type: string, id: string): void {
+  async deleteFavorite(type: string, id: string) {
     switch (type) {
       case 'artist':
-        this.favorites.artistIds = this.favorites.artistIds.filter(
-          (artistId) => artistId !== id,
-        );
-        break;
+        return this.favoritesRepository.delete({ type: 'artist', typeId: id });
       case 'album':
-        this.favorites.albumIds = this.favorites.albumIds.filter(
-          (albumId) => albumId !== id,
-        );
-        break;
+        return this.favoritesRepository.delete({ type: 'album', typeId: id });
       case 'track':
-        this.favorites.trackIds = this.favorites.trackIds.filter(
-          (trackId) => trackId !== id,
-        );
-        break;
+        return this.favoritesRepository.delete({ type: 'track', typeId: id });
       default:
         throw new Error('Unknown type');
     }
-  }
-  deleteId(type: string, id: string) {
-    this.favorites[type + 'Ids'] = this.favorites[type + 'Ids'].filter(
-      (itemId) => itemId !== id,
-    );
   }
 }
