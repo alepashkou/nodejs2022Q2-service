@@ -23,55 +23,30 @@ export class UserService {
   async getUser(id: string): Promise<User> {
     const findedUser = await this.userRepository.findOneBy({ id });
     if (!findedUser) throw new NotFoundException('Not Found');
+
     return findedUser;
   }
 
-  async createUser(userDto: CreateUserDto): Promise<User> {
-    const savedUser = await this.userRepository.save({
-      ...userDto,
-      createdAt: +new Date(),
-      updatedAt: +new Date(),
-    });
-    return {
-      id: savedUser.id,
-      login: savedUser.login,
-      version: savedUser.version,
-      createdAt: +savedUser.createdAt,
-      updatedAt: +savedUser.updatedAt,
-    };
+  async createUser(userDto: CreateUserDto) {
+    const createdUser = this.userRepository.create(userDto);
+    return (await this.userRepository.save(createdUser)).toResponse();
   }
 
-  async updateUser(
-    id: string,
-    userPasswordDto: UpdatePasswordDto,
-  ): Promise<User> {
+  async updateUser(id: string, userPasswordDto: UpdatePasswordDto) {
     const findedUser = await this.userRepository.findOneBy({ id });
     if (!findedUser) throw new NotFoundException('Not Found');
 
     if (userPasswordDto.oldPassword !== findedUser.password)
       throw new ForbiddenException('Password is not correct');
 
-    const updatedUser = {
-      ...findedUser,
-      password: userPasswordDto.newPassword,
-      version: findedUser.version + 1,
-      updatedAt: +new Date(),
-    };
-
-    const savedUser = await this.userRepository.save(updatedUser);
-
-    return {
-      id: savedUser.id,
-      login: savedUser.login,
-      version: savedUser.version,
-      createdAt: +savedUser.createdAt,
-      updatedAt: +savedUser.updatedAt,
-    };
+    findedUser.password = userPasswordDto.newPassword;
+    return (await this.userRepository.save(findedUser)).toResponse();
   }
 
   async deleteUser(id: string) {
     const findedUser = await this.userRepository.findOneBy({ id });
     if (!findedUser) throw new NotFoundException('Not Found');
+
     await this.userRepository.delete(id);
   }
 }

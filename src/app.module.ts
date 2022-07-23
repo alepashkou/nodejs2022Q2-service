@@ -5,17 +5,17 @@ import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { TrackModule } from './track/track.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CoreModule } from './core/core.module';
 import { FavsModule } from './favs/favs.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    EventEmitterModule.forRoot(),
     UserModule,
     ArtistModule,
     AlbumModule,
     TrackModule,
     FavsModule,
-    CoreModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,

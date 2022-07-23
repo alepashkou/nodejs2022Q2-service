@@ -9,6 +9,7 @@ import { Track } from 'src/track/entity/track.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Favorites } from '../entity/favs.entity';
 import { Repository } from 'typeorm';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class FavsService {
@@ -93,5 +94,19 @@ export class FavsService {
       default:
         throw new Error('Unknown type');
     }
+  }
+  @OnEvent('delete.track')
+  deleteTrack(id: string) {
+    this.favoritesRepository.delete({ type: 'track', typeId: id });
+  }
+
+  @OnEvent('delete.artist')
+  deleteArtist(id: string) {
+    this.favoritesRepository.delete({ type: 'artist', typeId: id });
+  }
+
+  @OnEvent('delete.album')
+  deleteAlbum(id: string) {
+    this.favoritesRepository.delete({ type: 'album', typeId: id });
   }
 }
