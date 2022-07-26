@@ -7,6 +7,7 @@ import { TrackModule } from './track/track.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FavsModule } from './favs/favs.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import config from './ormconfig';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -16,18 +17,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     AlbumModule,
     TrackModule,
     FavsModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: +process.env.POSTGRES_PORT,
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DB,
-      entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: true,
-      migrations: ['dist/**/migration/*.js'],
-      migrationsRun: true,
-    }),
+    TypeOrmModule.forRoot(config),
   ],
 })
 export class AppModule {}
