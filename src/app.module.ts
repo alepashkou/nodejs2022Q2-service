@@ -7,7 +7,7 @@ import { TrackModule } from './track/track.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FavsModule } from './favs/favs.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import config from './ormconfig';
+import { configOptions } from './ormconfig';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -17,7 +17,7 @@ import config from './ormconfig';
     AlbumModule,
     TrackModule,
     FavsModule,
-    TypeOrmModule.forRoot(config),
+    TypeOrmModule.forRoot(configOptions),
   ],
 })
 export class AppModule {}
