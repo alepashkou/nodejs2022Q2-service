@@ -6,13 +6,16 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { Album } from 'src/resources/album/entity/album.entity';
 import { Artist } from 'src/resources/artist/entity/artist.entity';
 import { Track } from 'src/resources/track/entity/track.entity';
+import { AuthGuard } from '../auth/auth.guard';
 import { FavoritesResponse } from './interfaces/favs.interfaces';
 import { FavsService } from './services/favs.service';
 
+@UseGuards(AuthGuard)
 @Controller('favs')
 export class FavsController {
   constructor(private readonly favsService: FavsService) {}

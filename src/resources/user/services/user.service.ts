@@ -8,7 +8,10 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdatePasswordDto } from '../dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { genHashPassword } from 'src/additional/genHashPassword';
+import {
+  genHashPassword,
+  comparePassword,
+} from 'src/additional/genHashPassword';
 
 @Injectable()
 export class UserService {
@@ -17,15 +20,16 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async getUsers(): Promise<User[]> {
-    return this.userRepository.find();
+  async getUsers() {
+    const users = await this.userRepository.find();
+    return users.map((user) => user.toResponse());
   }
 
-  async getUser(id: string): Promise<User> {
+  async getUser(id: string) {
     const findedUser = await this.userRepository.findOneBy({ id });
     if (!findedUser) throw new NotFoundException('Not Found');
 
-    return findedUser;
+    return findedUser.toResponse();
   }
 
   async createUser(userDto: CreateUserDto) {
@@ -37,10 +41,13 @@ export class UserService {
   async updateUser(id: string, userPasswordDto: UpdatePasswordDto) {
     const findedUser = await this.userRepository.findOneBy({ id });
     if (!findedUser) throw new NotFoundException('Not Found');
-
-    if (userPasswordDto.oldPassword !== findedUser.password)
+    const isValid = await comparePassword(
+      userPasswordDto.oldPassword,
+      findedUser.password,
+    );
+    if (!isValid) {
       throw new ForbiddenException('Password is not correct');
-
+    }
     findedUser.password = userPasswordDto.newPassword;
     return (await this.userRepository.save(findedUser)).toResponse();
   }
