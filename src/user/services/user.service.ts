@@ -16,15 +16,16 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async getUsers(): Promise<User[]> {
-    return this.userRepository.find();
+  async getUsers() {
+    const users = await this.userRepository.find();
+    return users.map((user) => user.toResponse());
   }
 
-  async getUser(id: string): Promise<User> {
+  async getUser(id: string) {
     const findedUser = await this.userRepository.findOneBy({ id });
     if (!findedUser) throw new NotFoundException('Not Found');
 
-    return findedUser;
+    return findedUser.toResponse();
   }
 
   async createUser(userDto: CreateUserDto) {
