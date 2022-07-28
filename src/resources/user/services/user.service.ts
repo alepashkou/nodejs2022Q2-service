@@ -8,6 +8,7 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdatePasswordDto } from '../dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { genHashPassword } from 'src/additional/genHashPassword';
 
 @Injectable()
 export class UserService {
@@ -28,6 +29,7 @@ export class UserService {
   }
 
   async createUser(userDto: CreateUserDto) {
+    userDto.password = await genHashPassword(userDto.password);
     const createdUser = this.userRepository.create(userDto);
     return (await this.userRepository.save(createdUser)).toResponse();
   }

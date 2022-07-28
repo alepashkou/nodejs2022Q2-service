@@ -11,7 +11,7 @@ import { AuthService } from './services/auth.service';
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: process.env.JWT_SECRET_KEY,
+      secret: process.env.JWT_SECRET_KEY as string,
     }),
   ],
 })
