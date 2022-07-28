@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  genHashPassword,
-  comparePassword,
-} from 'src/additional/genHashPassword';
+import { genHashPassword, comparePassword } from 'src/additional/hashPassword';
 import { CreateUserDto } from 'src/resources/user/dto/create-user.dto';
 import { User } from 'src/resources/user/entity/user.entity';
 import { Repository } from 'typeorm';

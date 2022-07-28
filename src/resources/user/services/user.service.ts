@@ -8,10 +8,7 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdatePasswordDto } from '../dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  genHashPassword,
-  comparePassword,
-} from 'src/additional/genHashPassword';
+import { genHashPassword, comparePassword } from 'src/additional/hashPassword';
 
 @Injectable()
 export class UserService {
