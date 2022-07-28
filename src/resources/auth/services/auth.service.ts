@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { genHashPassword, comparePassword } from 'src/additional/hashPassword';
 import { CreateUserDto } from 'src/resources/user/dto/create-user.dto';
 import { User } from 'src/resources/user/entity/user.entity';
 import { Repository } from 'typeorm';
 import { Login } from '../dto/login.dto';
+import { RefreshToken } from '../dto/refresh-token.dto';
 import { TokenService } from './token.service';
 
 @Injectable()
@@ -26,12 +27,16 @@ export class AuthService {
       where: { login: loginDto.login },
     });
     if (!findUser) {
-      throw new Error('User not found');
+      throw new ForbiddenException('User not found');
     }
     const isValid = await comparePassword(loginDto.password, findUser.password);
     if (!isValid) {
       throw new Error('Password is not correct');
     }
     return this.tokenService.genereateToken(findUser.id, findUser.login);
+  }
+
+  async refresh(refreshToken: RefreshToken) {
+    return this.tokenService.refreshToken(refreshToken.refreshToken);
   }
 }

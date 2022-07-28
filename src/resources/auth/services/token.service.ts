@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as jwt from 'jsonwebtoken';
 import { Repository } from 'typeorm';
@@ -9,7 +10,9 @@ export class TokenService {
   constructor(
     @InjectRepository(Token)
     private readonly tokenRepository: Repository<Token>,
+    private readonly jwtService: JwtService,
   ) {}
+
   async genereateToken(userId: string, login: string) {
     const accessToken = jwt.sign(
       { userId, login },
@@ -35,13 +38,25 @@ export class TokenService {
   }
 
   async refreshToken(refreshToken: string) {
-    const decoded = jwt.verify(
-      refreshToken,
-      process.env.JWT_SECRET_REFRESH_KEY,
-    );
-    if (!decoded) {
-      throw new Error('Refresh token is not valid');
+    try {
+      const verify = await this.jwtService.verify(refreshToken, {
+        secret: process.env.JWT_SECRET_REFRESH_KEY,
+      });
+
+      if (Date.now() >= verify.exp * 1000) {
+        throw new ForbiddenException('Refresh token is expired');
+      }
+
+      const findedToken = this.tokenRepository.findOne({
+        where: { userId: verify.userId, refreshToken },
+      });
+      if (!findedToken) {
+        throw new ForbiddenException('Refresh token is not found');
+      }
+
+      return this.genereateToken(verify.userId, verify.login);
+    } catch (e) {
+      throw new ForbiddenException('Invalid token');
     }
-    // return this.genereateToken(decoded.userId, decoded.login);
   }
 }
