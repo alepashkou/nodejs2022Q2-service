@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AlbumModule } from 'src/album/album.module';
-import { ArtistModule } from 'src/artist/artist.module';
-import { TrackModule } from 'src/track/track.module';
+import { AlbumModule } from 'src/resources/album/album.module';
+import { ArtistModule } from 'src/resources/artist/artist.module';
+import { TrackModule } from 'src/resources/track/track.module';
 import { Favorites } from './entity/favs.entity';
 import { FavsController } from './favs.controller';
 import { FavsService } from './services/favs.service';

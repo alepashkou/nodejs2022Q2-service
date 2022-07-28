@@ -1,11 +1,11 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
-import { AlbumService } from 'src/album/services/album.service';
-import { ArtistService } from 'src/artist/services/artist.service';
-import { TrackService } from 'src/track/services/track.service';
+import { AlbumService } from 'src/resources/album/services/album.service';
+import { ArtistService } from 'src/resources/artist/services/artist.service';
+import { TrackService } from 'src/resources/track/services/track.service';
 import { FavoritesResponse } from '../interfaces/favs.interfaces';
-import { Album } from 'src/album/entity/album.entity';
-import { Artist } from 'src/artist/entity/artist.entity';
-import { Track } from 'src/track/entity/track.entity';
+import { Album } from 'src/resources/album/entity/album.entity';
+import { Artist } from 'src/resources/artist/entity/artist.entity';
+import { Track } from 'src/resources/track/entity/track.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Favorites } from '../entity/favs.entity';
 import { Repository } from 'typeorm';

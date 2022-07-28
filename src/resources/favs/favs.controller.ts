@@ -7,9 +7,9 @@ import {
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
-import { Album } from 'src/album/entity/album.entity';
-import { Artist } from 'src/artist/entity/artist.entity';
-import { Track } from 'src/track/entity/track.entity';
+import { Album } from 'src/resources/album/entity/album.entity';
+import { Artist } from 'src/resources/artist/entity/artist.entity';
+import { Track } from 'src/resources/track/entity/track.entity';
 import { FavoritesResponse } from './interfaces/favs.interfaces';
 import { FavsService } from './services/favs.service';
 
