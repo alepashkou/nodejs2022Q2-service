@@ -20,6 +20,7 @@ export class AuthGuard implements CanActivate {
       if (Date.now() >= verify.exp * 1000) {
         return false;
       }
+
       return true;
     } catch (e) {
       throw new UnauthorizedException('Invalid token');

@@ -14,6 +14,7 @@ export class TokenService {
   ) {}
 
   async genereateToken(userId: string, login: string) {
+    await this.tokenRepository.delete({ userId });
     const accessToken = jwt.sign(
       { userId, login },
       process.env.JWT_SECRET_KEY,
@@ -47,13 +48,12 @@ export class TokenService {
         throw new ForbiddenException('Refresh token is expired');
       }
 
-      const findedToken = this.tokenRepository.findOne({
+      const findedToken = await this.tokenRepository.findOne({
         where: { userId: verify.userId, refreshToken },
       });
       if (!findedToken) {
         throw new ForbiddenException('Refresh token is not found');
       }
-
       return this.genereateToken(verify.userId, verify.login);
     } catch (e) {
       throw new ForbiddenException('Invalid token');
