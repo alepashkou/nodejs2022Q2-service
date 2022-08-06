@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './resources/user/user.module';
 import { ArtistModule } from './resources/artist/artist.module';
@@ -12,6 +12,7 @@ import { AuthModule } from './resources/auth/auth.module';
 import { LoggerModule } from './logger/logger.module';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './logger/httpException.filter';
+import { LoggerMiddleware } from './logger/logger.middleware';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -32,4 +33,8 @@ import { HttpExceptionFilter } from './logger/httpException.filter';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
