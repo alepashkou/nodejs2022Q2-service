@@ -2,17 +2,15 @@ import { mkdir, readdir, appendFile, stat } from 'fs/promises';
 import { join } from 'path';
 
 const createFile = async (path: string) => {
-  const d = new Date();
+  const date = new Date();
+  const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+  const month =
+    date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+  const hours = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
+  const minutes =
+    date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
   const datestring =
-    d.getDate() +
-    '-' +
-    (d.getMonth() + 1) +
-    '-' +
-    d.getFullYear() +
-    ' ' +
-    d.getHours() +
-    '-' +
-    d.getMinutes();
+    day + '-' + month + '-' + date.getFullYear() + ' ' + hours + '-' + minutes;
   const pathToFile = join(path, `${datestring}.log`);
   await appendFile(pathToFile, '');
   return pathToFile;
@@ -24,6 +22,7 @@ const saveData = async (file: string, message: string, obj: unknown) => {
     `[${new Date().toUTCString()}] ${message} ${JSON.stringify(obj)}\n`,
   );
 };
+
 const checkSize = async (
   folder: string,
   path: string,
@@ -42,6 +41,7 @@ const checkSize = async (
     return path;
   }
 };
+
 export const saveLog = async (type: string, message: string, obj: unknown) => {
   const folder = join(process.cwd() + '/logs/' + type);
   let file: string;

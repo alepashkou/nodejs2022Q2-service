@@ -10,6 +10,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { configOptions } from './ormconfig';
 import { AuthModule } from './resources/auth/auth.module';
 import { LoggerModule } from './logger/logger.module';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './logger/httpException.filter';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -22,6 +24,12 @@ import { LoggerModule } from './logger/logger.module';
     TypeOrmModule.forRoot(configOptions),
     AuthModule,
     LoggerModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
 export class AppModule {}

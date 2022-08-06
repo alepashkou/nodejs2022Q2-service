@@ -10,10 +10,11 @@ import { LogService } from './logger/logger.service';
 const PORT: number = +process.env.PORT || 4000;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
 
-  const logger = app.get(LogService);
-  app.useLogger(logger);
+  app.useLogger(new LogService());
 
   app.useGlobalPipes(new ValidationPipe());
 
