@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+  node:
+    container_name: node-service
+    env_file:
+      - .env
+    build:
+      context: .
+      target: development
+    ports:
+      - '${PORT}:${PORT}'
+    restart: always
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev
+    depends_on:
+      - postgres
+    networks:
+      - node-postgres-bridge
+  postgres:
+    container_name: postgres-service
+    env_file:
+      - .env
+    build: ./database/
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    restart: always
+    volumes:
+      - database:/var/lib/postgresql/data
+      - database-logs:/logs
+    networks:
+      - node-postgres-bridge
+volumes:
+  database:
+  database-logs:
+networks:
+  node-postgres-bridge:
+    driver: bridge
